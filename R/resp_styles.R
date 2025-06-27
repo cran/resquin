@@ -4,13 +4,16 @@
 #'
 #' @param x A data frame containing survey responses in wide format. For more information
 #' see section "Data requirements" below.
-#' @param scale_min numeric. Minimum of scale provided.
-#' @param scale_max numeric. Maximum of scale provided.
-#' @param min_valid_responses numeric between 0 and 1. Defines the share of valid responses
+#' @param scale_min Numeric of length 1. Minimum of scale provided.
+#' @param scale_max Numeric of length 1. Maximum of scale provided.
+#' @param min_valid_responses Numeric between 0 and 1 of length 1. Defines the share of valid responses
 #' a respondent must have to calculate response style indicators.
-#' @param normalize logical. If *TRUE*, counts of response style indicators will
+#' @param normalize logical of length 1. If *TRUE*, counts of response style indicators will
 #'  be divided by the number of non-missing responses per respondent. Default is
 #'  *TRUE*.
+#' @param id default is `True`. If the default value is supplied
+#' a column named `id` with integer ids will be created. If `False` is supplied, no id column will be created. Alternatively, a numeric or character vector of unique values identifying
+#' each respondent can be supplied. Needs to be of the same length as the number of rows of `x`.
 #'
 #' @details
 #'
@@ -18,18 +21,18 @@
 #' `resp_styles()` is aimed at multi-item scales or matrix questions which use the same number of
 #' response options for many questions.
 #'
-#' #' The following response style indicators are calculated per respondent:
+#' The following response style indicators are calculated per respondent:
 #' Middle response style (MRS), acquiescence response style (ARS), disacquiescence
-#' response style (DARS), extreme response style (ERS) and
+#' response style (DRS), extreme response style (ERS) and
 #' non-extreme response style (NERS).
 #'
 #' The response style indicators are calculated in the following way
 #' \itemize{
 #'    \item MRS: Sum of mid point responses.
 #'    \item ARS: Sum of responses larger than midpoint.
-#'    \item DARS: Sum of responses lower than midpoint.
+#'    \item DRS: Sum of responses lower than midpoint.
 #'    \item ERS: Sum of lowest or highest category responses.
-#'    \item NERS: Sum of responses between lowest and highest respnose category.
+#'    \item NERS: Sum of responses between lowest and highest response category.
 #'    }
 #'
 #' Note that ARS and DRS assume that the polarity of the scale is positive. This
@@ -57,15 +60,19 @@
 #' @returns Returns a data frame with response style indicators
 #'  per respondent.
 #'  * Rows: Equal to number of rows in x.
-#'  * Columns: Five, one for each response style indicator.
+#'  * Columns: Five for each response style indicator + id column (if specified).
 #'
 #' @seealso [resp_distributions()] for calculating response distribution indicators.
+#' [resp_nondifferentiation()] for calculating response nondifferentiation indicators.
+#' [resp_patterns()] for calculating response pattern indicators.
 #'
 #' @author Matthias Roth, Matthias Bluemke & Clemens Lechner
 #'
 #' @references
 #' Bhaktha, Nivedita, Henning Silber, and Clemens Lechner. 2024. „Characterizing response quality in surveys with multi-item scales: A unified framework“. OSF-preprtint: https://osf.io/9gs67/
+#'
 #' van Vaerenbergh, Y., and T. D. Thomas. 2013. „Response Styles in Survey Research: A Literature Review of Antecedents, Consequences, and Remedies“. International Journal of Public Opinion Research 25(2):195–217. doi: 10.1093/ijpor/eds021.
+#'
 #' Wetzel, Eunike, Claus H. Carstensen, und Jan R. Böhnke. 2013. „Consistency of Extreme Response Style and Non-Extreme Response Style across Traits“. Journal of Research in Personality 47(2):178–89. doi: 10.1016/j.jrp.2012.10.010.
 #'
 #' @examples
@@ -102,9 +109,15 @@ resp_styles <- function(x,
                    scale_min,
                    scale_max,
                    min_valid_responses = 1,
-                   normalize = TRUE) {
+                   normalize = TRUE,
+                   id = T) {
   # Input check
-  input_check_resp_styles(x,scale_min,scale_max,min_valid_responses,normalize)
+  input_check_resp_styles(x,
+                          scale_min,
+                          scale_max,
+                          min_valid_responses,
+                          normalize,
+                          id)
 
   # Truncate response quality indicators where number of valid responses is not >= min_valid_responses
   na_mask <- if(min_valid_responses== 0){
@@ -138,10 +151,18 @@ resp_styles <- function(x,
   output$NERS[!na_mask]<- rowSums(x[!na_mask,] != scale_min & x[!na_mask,] != scale_max,na.rm=T)
 
   # Change type
-  output <- as.data.frame(output)
+  output <- tibble::as_tibble(output)
 
   # Contiditional normalization
   if(normalize) output <- output/rowSums(!is.na(x))
+
+  # Add id in front
+  id <- if(isFALSE(id)) return(output) else if(isTRUE(id)) 1:nrow(x) else id
+  output <- cbind(id,output) |>
+    new_resp_indicator(min_valid_responses,
+                       na_mask,
+                       if("id" %in% names(output)) output$id else F)
+
 
   return(output)
 }

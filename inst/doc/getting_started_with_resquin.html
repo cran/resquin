@@ -60,7 +60,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -143,6 +143,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 
 
 
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
 
 <style type="text/css">body {
 background-color: #fff;
@@ -393,7 +416,7 @@ values, which are set to <code>NA</code>.</p>
 <p>Response styles capture systematic shifts in respondents response
 behavior. For example, respondents with an extreme response style may
 only choose the lowest and highest categories (in our example 1 and 5)
-while mid-point responder only choose the midpoint of a scale (in our
+while mid-point respondents only choose the midpoint of a scale (in our
 example 3).</p>
 <p>To calculate response styles we can use the
 <code>resp_styles()</code> function. First, we need to specify our data
@@ -413,17 +436,20 @@ the arguments <code>min_valid_responses</code> and
 <span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  <span class="at">normalize =</span> T)  <span class="co"># Presents results in percent of all responses</span></span>
 <span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a></span>
 <span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="fu">round</span>(results_response_styles,<span class="dv">2</span>)</span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt;     MRS  ARS  DRS  ERS NERS</span></span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; 1  0.00 0.00 1.00 0.67 0.33</span></span>
-<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; 2  0.00 0.67 0.33 0.33 0.67</span></span>
-<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; 3  0.67 0.00 0.33 0.00 1.00</span></span>
-<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; 4    NA   NA   NA   NA   NA</span></span>
-<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; 5  0.67 0.33 0.00 0.00 1.00</span></span>
-<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; 6  0.00 0.33 0.67 0.33 0.67</span></span>
-<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt; 7    NA   NA   NA   NA   NA</span></span>
-<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; 8  0.00 0.33 0.67 0.67 0.33</span></span>
-<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt; 9    NA   NA   NA   NA   NA</span></span>
-<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; 10   NA   NA   NA   NA   NA</span></span></code></pre></div>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; # Number of missings due to min_valid_responses equal to 1: 4</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; # A data frame:                                             10 × 6</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt;       id   MRS   ARS   DRS   ERS  NERS</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt;  1     1  0     0     1     0.67  0.33</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt;  2     2  0     0.67  0.33  0.33  0.67</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt;  3     3  0.67  0     0.33  0     1   </span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt;  4     4 NA    NA    NA    NA    NA   </span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt;  5     5  0.67  0.33  0     0     1   </span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt;  6     6  0     0.33  0.67  0.33  0.67</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt;  7     7 NA    NA    NA    NA    NA   </span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt;  8     8  0     0.33  0.67  0.67  0.33</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co">#&gt;  9     9 NA    NA    NA    NA    NA   </span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co">#&gt; 10    10 NA    NA    NA    NA    NA</span></span></code></pre></div>
 <p>The resulting data frame contains five columns corresponding to the
 middle response style (MRS), acquiescence response style (ARS),
 disaquiescence response style (DRS), extreme response style (ERS), and
@@ -453,6 +479,47 @@ only be calculated for respondents who have valid responses on all
 variables. Values between 0 and 1 indicate the share of responses that
 need to be valid to be included in the response style calculations.</p>
 </div>
+<div id="how-to-quickly-glance-at-results" class="section level3">
+<h3>How to quickly glance at results</h3>
+<p>Results from <code>resp_*()</code> functions can be fed to
+<code>summary()</code> and <code>print()</code> functions to quickly
+create overviews for the calculated response quality indicators.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>results_response_styles <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">summary</span>()</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; ── Averages of response quality indicators</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt;  MRS  ARS  DRS  ERS NERS </span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; 0.22 0.28 0.50 0.33 0.67</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; ── Quantiles of response quality indicators</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 × 6</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt;   quantiles   MRS   ARS   DRS   ERS  NERS</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; 1 0%         0     0     0     0     0.33</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; 2 25%        0     0.08  0.33  0.08  0.42</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; 3 50%        0     0.33  0.5   0.33  0.67</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; 4 75%        0.5   0.33  0.67  0.58  0.92</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; 5 100%       0.67  0.67  1     0.67  1</span></span></code></pre></div>
+<p>Calculates the averages and a five point summary of the response
+quality indicators.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>results_response_styles <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">print</span>()</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt; # Number of missings due to min_valid_responses equal to 1: 4</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; # A data frame:                                             10 × 6</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt;       id    MRS    ARS    DRS    ERS   NERS</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt;  1     1  0      0      1      0.667  0.333</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt;  2     2  0      0.667  0.333  0.333  0.667</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt;  3     3  0.667  0      0.333  0      1    </span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt;  4     4 NA     NA     NA     NA     NA    </span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt;  5     5  0.667  0.333  0      0      1    </span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt;  6     6  0      0.333  0.667  0.333  0.667</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt;  7     7 NA     NA     NA     NA     NA    </span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt;  8     8  0      0.333  0.667  0.667  0.333</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt;  9     9 NA     NA     NA     NA     NA    </span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; 10    10 NA     NA     NA     NA     NA</span></span></code></pre></div>
+<p>Prints a boxplot of the indicators.</p>
+</div>
 <div id="resp_distributions-intra-individual-response-distribution-indicators" class="section level3">
 <h3><code>resp_distributions()</code>: Intra-individual response
 distribution indicators</h3>
@@ -463,23 +530,26 @@ the location and variability of responses within a respondent.
 can include or exclude respondents from the calculations based on amount
 of missing data they exhibit (for an explanation see paragraph
 above).</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Calulating response distribution indicators for all respondents with no missing values</span></span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>results_resp_distributions <span class="ot">&lt;-</span> <span class="fu">resp_distributions</span>(</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">x =</span> testdata,</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="at">min_valid_responses =</span> <span class="dv">1</span>) <span class="co"># Excludes respondents with less than 100% valid responses</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="fu">round</span>(results_resp_distributions,<span class="dv">2</span>)</span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt;    n_na prop_na ii_mean ii_sd ii_median mahal</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; 1     0    0.00    1.33  0.58         1  2.04</span></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; 2     0    0.00    3.67  1.53         4  1.60</span></span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; 3     0    0.00    2.67  0.58         3  1.38</span></span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; 4     1    0.33      NA    NA        NA    NA</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; 5     0    0.00    3.33  0.58         3  0.97</span></span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; 6     0    0.00    2.33  1.53         2  1.38</span></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; 7     1    0.33      NA    NA        NA    NA</span></span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; 8     0    0.00    2.67  2.08         2  1.88</span></span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; 9     2    0.67      NA    NA        NA    NA</span></span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; 10    3    1.00      NA    NA        NA    NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># Calulating response distribution indicators for all respondents with no missing values</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>results_resp_distributions <span class="ot">&lt;-</span> <span class="fu">resp_distributions</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">x =</span> testdata,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">min_valid_responses =</span> <span class="dv">1</span>) <span class="co"># Excludes respondents with less than 100% valid responses</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="fu">round</span>(results_resp_distributions,<span class="dv">2</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; # Number of missings due to min_valid_responses equal to 1: 4</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; # A data frame:                                             10 × 7</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt;       id  n_na prop_na ii_mean ii_sd ii_median mahal</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt;    &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt;  1     1     0    0       1.33  0.58         1  2.04</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt;  2     2     0    0       3.67  1.53         4  1.6 </span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt;  3     3     0    0       2.67  0.58         3  1.38</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt;  4     4     1    0.33   NA    NA           NA NA   </span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt;  5     5     0    0       3.33  0.58         3  0.97</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt;  6     6     0    0       2.33  1.53         2  1.38</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt;  7     7     1    0.33   NA    NA           NA NA   </span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt;  8     8     0    0       2.67  2.08         2  1.88</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt;  9     9     2    0.67   NA    NA           NA NA   </span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; 10    10     3    1      NA    NA           NA NA</span></span></code></pre></div>
 <p>The resulting data frame contains eight columns:</p>
 <ul>
 <li><p>n_na: number of intra-individual missing answers</p></li>
@@ -491,7 +561,344 @@ responses</p></li>
 <li><p>mahal: Mahalanobis distance per respondent.</p></li>
 </ul>
 <p>You can learn more about the response distribution indicators using
-`?resp_distributions``</p>
+<code>?resp_distributions</code></p>
+</div>
+<div id="resp_nondifferentiation-response-nondifferentiation-indicators" class="section level3">
+<h3><code>resp_nondifferentiation()</code>: Response nondifferentiation
+indicators</h3>
+<p><code>resp_nondifferentiation</code> calculates indicators primarily
+measuring what is known as straightlining. However, different indicators
+measure different aspects of straightlining. While <em>Simple
+Nondifferentiation</em> just measures whether respondents used the same
+response option for all questions, other indicators such as the <em>Mean
+Root of Pairs Method</em> or the <em>Scale Point Variation Method</em>
+provide continuous values of nondifferentiation, measuring how varied
+the choice of response options for each respondent is.</p>
+<p><code>resp_nondifferentiation()</code> works just like
+<code>resp_distributions()</code> and <code>resp_styles()</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>results_resp_nondifferentiation <span class="ot">&lt;-</span> <span class="fu">resp_nondifferentiation</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="at">x =</span> testdata,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">min_valid_responses =</span> <span class="dv">1</span>) <span class="co"># Excludes respondents with less than 100% valid responses</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="fu">round</span>(results_resp_nondifferentiation,<span class="dv">2</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; # Number of missings due to min_valid_responses equal to 1: 4</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt; # A data frame:                                             10 × 5</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt;       id simple_nondifferentiation mean_root_pairs max_identical_rating</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt;    &lt;dbl&gt;                     &lt;dbl&gt;           &lt;dbl&gt;                &lt;dbl&gt;</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt;  1     1                         0            1                    0.67</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt;  2     2                         0            0.21                 0.33</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt;  3     3                         0            1                    0.67</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt;  4     4                        NA           NA                   NA   </span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt;  5     5                         0            1                    0.67</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt;  6     6                         0            0.21                 0.33</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt;  7     7                        NA           NA                   NA   </span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt;  8     8                         0            0                    0.33</span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt;  9     9                        NA           NA                   NA   </span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt; 10    10                        NA           NA                   NA   </span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt; # ℹ 1 more variable: scale_point_variation &lt;dbl&gt;</span></span></code></pre></div>
+<p>The resulting dataframe contains four columns containing indicators
+described by <span class="citation">(Kim et al. 2019)</span>:</p>
+<ul>
+<li>simple_nondifferentiation: Respondents are assigned 1 or 0 depending
+on whether all responses have the same value (1) or not (0).</li>
+<li>mean_root_pairs: Mean of the root of the absolute differences
+between all pairs in a multi-item scale or matrix questions. It ranges
+from 0 (least straightlining) to 1 (most straightlining).</li>
+<li>max_identical_rating: Proportion of the most commonly selected
+response option among all responses in a multi-item scale or matrix
+questions. It ranges from 0 (least straightlining) to 1 (most
+straightlining).</li>
+<li>scale_point_variation: The measure becomes larger if respondents use
+more scales points in a multi-item scale or matrix questions.</li>
+</ul>
+<p>You can learn more about the the response nondifferentiation
+indicators using <code>?resp_nondifferentiation</code>.</p>
+</div>
+<div id="resp_patterns-response-pattern-indicators" class="section level3">
+<h3><code>resp_patterns()</code>: Response pattern indicators</h3>
+<p>Response patterns describe suspicious response patterns arising from
+careless or insufficient effort responding. Careless or insufficient
+effort respondents might choose the same answer option repeatedly
+(i.e. creating a long string of equal responses) or use pattern, such as
+zig-zaging, to complete a survey.</p>
+<p><code>resp_patterns()</code> provides three columns which contain
+longstring analysis indicators for each respondent. These three columns
+are always returned. There are two more optional columns () for the
+analysis of other repeating response patterns: defined_patterns and
+arbitrary_patterns:</p>
+<p>To obtain the three longstring analysis columns simply call
+<code>resp_patterns()</code>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>results_resp_patterns <span class="ot">&lt;-</span> <span class="fu">resp_patterns</span>(testdata)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">round</span>(results_resp_patterns,<span class="dv">2</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; # Number of missings due to min_valid_responses equal to 1: 4</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; # A data frame:                                             10 × 4</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt;       id n_transitions mean_string_length longest_string_length</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt;    &lt;dbl&gt;         &lt;dbl&gt;              &lt;dbl&gt;                 &lt;dbl&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt;  1     1             2                  1                     1</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt;  2     2             2                  1                     1</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt;  3     3             2                  1                     1</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt;  4     4            NA                 NA                    NA</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt;  5     5             2                  1                     1</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt;  6     6             2                  1                     1</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt;  7     7            NA                 NA                    NA</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt;  8     8             2                  1                     1</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt;  9     9            NA                 NA                    NA</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt; 10    10            NA                 NA                    NA</span></span></code></pre></div>
+<p>To obtain counts of defined response patterns per respondents use the
+<code>defined_patterns</code> argument. You can either supply a single
+vector representing a response pattern, or a list of vectors
+representing multiple response patterns.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># Single defined pattern</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>defined_patterns_single <span class="ot">&lt;-</span> <span class="fu">resp_patterns</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="at">x =</span> testdata,</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="at">defined_patterns =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>)</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>defined_patterns_single</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt; # Number of missings due to min_valid_responses equal to 1: 4</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt; # A data frame:                                             10 × 5</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt;       id n_transitions mean_string_length longest_string_length defined_patterns</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt;         &lt;dbl&gt;              &lt;dbl&gt;                 &lt;int&gt; &lt;list&gt;          </span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt;  1     1             2                  1                     1 &lt;int [1]&gt;       </span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt;  2     2             2                  1                     1 &lt;int [1]&gt;       </span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt;  3     3             2                  1                     1 &lt;int [1]&gt;       </span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt;  4     4            NA                 NA                    NA &lt;NULL&gt;          </span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt;  5     5             2                  1                     1 &lt;int [1]&gt;       </span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#&gt;  6     6             2                  1                     1 &lt;int [1]&gt;       </span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#&gt;  7     7            NA                 NA                    NA &lt;NULL&gt;          </span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#&gt;  8     8             2                  1                     1 &lt;int [1]&gt;       </span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="co">#&gt;  9     9            NA                 NA                    NA &lt;NULL&gt;          </span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="co">#&gt; 10    10            NA                 NA                    NA &lt;NULL&gt;</span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="co"># Multiple defined patterns</span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a>defined_patterns_multiple <span class="ot">&lt;-</span> <span class="fu">resp_patterns</span>(</span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a>  <span class="at">x =</span> testdata,</span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a>  <span class="at">defined_patterns =</span> <span class="fu">list</span>( <span class="co"># wrap multiple pattern vectors into a list</span></span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),</span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>),</span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>),</span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>)</span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a>  )</span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a>)</span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a></span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a>defined_patterns_multiple</span>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="co">#&gt; # Number of missings due to min_valid_responses equal to 1: 4</span></span>
+<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a><span class="co">#&gt; # A data frame:                                             10 × 5</span></span>
+<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a><span class="co">#&gt;       id n_transitions mean_string_length longest_string_length defined_patterns</span></span>
+<span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt;         &lt;dbl&gt;              &lt;dbl&gt;                 &lt;int&gt; &lt;list&gt;          </span></span>
+<span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a><span class="co">#&gt;  1     1             2                  1                     1 &lt;int [4]&gt;       </span></span>
+<span id="cb8-39"><a href="#cb8-39" tabindex="-1"></a><span class="co">#&gt;  2     2             2                  1                     1 &lt;int [4]&gt;       </span></span>
+<span id="cb8-40"><a href="#cb8-40" tabindex="-1"></a><span class="co">#&gt;  3     3             2                  1                     1 &lt;int [4]&gt;       </span></span>
+<span id="cb8-41"><a href="#cb8-41" tabindex="-1"></a><span class="co">#&gt;  4     4            NA                 NA                    NA &lt;NULL&gt;          </span></span>
+<span id="cb8-42"><a href="#cb8-42" tabindex="-1"></a><span class="co">#&gt;  5     5             2                  1                     1 &lt;int [4]&gt;       </span></span>
+<span id="cb8-43"><a href="#cb8-43" tabindex="-1"></a><span class="co">#&gt;  6     6             2                  1                     1 &lt;int [4]&gt;       </span></span>
+<span id="cb8-44"><a href="#cb8-44" tabindex="-1"></a><span class="co">#&gt;  7     7            NA                 NA                    NA &lt;NULL&gt;          </span></span>
+<span id="cb8-45"><a href="#cb8-45" tabindex="-1"></a><span class="co">#&gt;  8     8             2                  1                     1 &lt;int [4]&gt;       </span></span>
+<span id="cb8-46"><a href="#cb8-46" tabindex="-1"></a><span class="co">#&gt;  9     9            NA                 NA                    NA &lt;NULL&gt;          </span></span>
+<span id="cb8-47"><a href="#cb8-47" tabindex="-1"></a><span class="co">#&gt; 10    10            NA                 NA                    NA &lt;NULL&gt;</span></span>
+<span id="cb8-48"><a href="#cb8-48" tabindex="-1"></a></span>
+<span id="cb8-49"><a href="#cb8-49" tabindex="-1"></a><span class="co"># defined patterns are returned as a single list column.</span></span>
+<span id="cb8-50"><a href="#cb8-50" tabindex="-1"></a><span class="co"># One way to make the data accessible is by using tidyr::unnest_wider()</span></span>
+<span id="cb8-51"><a href="#cb8-51" tabindex="-1"></a><span class="co"># This way, each column represents the count of one defined pattern</span></span>
+<span id="cb8-52"><a href="#cb8-52" tabindex="-1"></a></span>
+<span id="cb8-53"><a href="#cb8-53" tabindex="-1"></a>defined_patterns_multiple <span class="sc">|&gt;</span> </span>
+<span id="cb8-54"><a href="#cb8-54" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest_wider</span>(defined_patterns)</span>
+<span id="cb8-55"><a href="#cb8-55" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 × 8</span></span>
+<span id="cb8-56"><a href="#cb8-56" tabindex="-1"></a><span class="co">#&gt;       id n_transitions mean_string_length longest_string_length `1_2_3` `2_3_4`</span></span>
+<span id="cb8-57"><a href="#cb8-57" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt;         &lt;dbl&gt;              &lt;dbl&gt;                 &lt;int&gt;   &lt;int&gt;   &lt;int&gt;</span></span>
+<span id="cb8-58"><a href="#cb8-58" tabindex="-1"></a><span class="co">#&gt;  1     1             2                  1                     1       0       0</span></span>
+<span id="cb8-59"><a href="#cb8-59" tabindex="-1"></a><span class="co">#&gt;  2     2             2                  1                     1       0       0</span></span>
+<span id="cb8-60"><a href="#cb8-60" tabindex="-1"></a><span class="co">#&gt;  3     3             2                  1                     1       0       0</span></span>
+<span id="cb8-61"><a href="#cb8-61" tabindex="-1"></a><span class="co">#&gt;  4     4            NA                 NA                    NA      NA      NA</span></span>
+<span id="cb8-62"><a href="#cb8-62" tabindex="-1"></a><span class="co">#&gt;  5     5             2                  1                     1       0       0</span></span>
+<span id="cb8-63"><a href="#cb8-63" tabindex="-1"></a><span class="co">#&gt;  6     6             2                  1                     1       0       0</span></span>
+<span id="cb8-64"><a href="#cb8-64" tabindex="-1"></a><span class="co">#&gt;  7     7            NA                 NA                    NA      NA      NA</span></span>
+<span id="cb8-65"><a href="#cb8-65" tabindex="-1"></a><span class="co">#&gt;  8     8             2                  1                     1       0       0</span></span>
+<span id="cb8-66"><a href="#cb8-66" tabindex="-1"></a><span class="co">#&gt;  9     9            NA                 NA                    NA      NA      NA</span></span>
+<span id="cb8-67"><a href="#cb8-67" tabindex="-1"></a><span class="co">#&gt; 10    10            NA                 NA                    NA      NA      NA</span></span>
+<span id="cb8-68"><a href="#cb8-68" tabindex="-1"></a><span class="co">#&gt; # ℹ 2 more variables: `4_3_2` &lt;int&gt;, `3_2_1` &lt;int&gt;</span></span></code></pre></div>
+<p>Finally, you can request the detection of arbitrary response patterns
+with counts larger than one and pattern lengths longer than one using
+the <code>arbitrary_patterns</code> argument</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>arbitrary_patterns_length_2 <span class="ot">&lt;-</span> <span class="fu">resp_patterns</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="at">x =</span> testdata,</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="at">arbitrary_patterns =</span> <span class="dv">2</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>)</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>arbitrary_patterns_length_2</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; # Number of missings due to min_valid_responses equal to 1: 4</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; # A data frame:                                             10 × 5</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt;       id n_transitions mean_string_length longest_string_length</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt;         &lt;dbl&gt;              &lt;dbl&gt;                 &lt;int&gt;</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt;  1     1             2                  1                     1</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt;  2     2             2                  1                     1</span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt;  3     3             2                  1                     1</span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt;  4     4            NA                 NA                    NA</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#&gt;  5     5             2                  1                     1</span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co">#&gt;  6     6             2                  1                     1</span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co">#&gt;  7     7            NA                 NA                    NA</span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co">#&gt;  8     8             2                  1                     1</span></span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="co">#&gt;  9     9            NA                 NA                    NA</span></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="co">#&gt; 10    10            NA                 NA                    NA</span></span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a><span class="co">#&gt; # ℹ 1 more variable: arbitrary_patterns &lt;list&gt;</span></span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a><span class="co"># You can also request the detection of patterns of multiple </span></span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a><span class="co"># lengths, in this case 2 and 3</span></span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a>arbitrary_patterns_length_2_3 <span class="ot">&lt;-</span> <span class="fu">resp_patterns</span>(</span>
+<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a>  <span class="at">x =</span> testdata,</span>
+<span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a>  <span class="at">arbitrary_patterns =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>)</span>
+<span id="cb9-28"><a href="#cb9-28" tabindex="-1"></a>)</span>
+<span id="cb9-29"><a href="#cb9-29" tabindex="-1"></a>arbitrary_patterns_length_2_3</span>
+<span id="cb9-30"><a href="#cb9-30" tabindex="-1"></a><span class="co">#&gt; # Number of missings due to min_valid_responses equal to 1: 4</span></span>
+<span id="cb9-31"><a href="#cb9-31" tabindex="-1"></a><span class="co">#&gt; # A data frame:                                             10 × 5</span></span>
+<span id="cb9-32"><a href="#cb9-32" tabindex="-1"></a><span class="co">#&gt;       id n_transitions mean_string_length longest_string_length</span></span>
+<span id="cb9-33"><a href="#cb9-33" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt;         &lt;dbl&gt;              &lt;dbl&gt;                 &lt;int&gt;</span></span>
+<span id="cb9-34"><a href="#cb9-34" tabindex="-1"></a><span class="co">#&gt;  1     1             2                  1                     1</span></span>
+<span id="cb9-35"><a href="#cb9-35" tabindex="-1"></a><span class="co">#&gt;  2     2             2                  1                     1</span></span>
+<span id="cb9-36"><a href="#cb9-36" tabindex="-1"></a><span class="co">#&gt;  3     3             2                  1                     1</span></span>
+<span id="cb9-37"><a href="#cb9-37" tabindex="-1"></a><span class="co">#&gt;  4     4            NA                 NA                    NA</span></span>
+<span id="cb9-38"><a href="#cb9-38" tabindex="-1"></a><span class="co">#&gt;  5     5             2                  1                     1</span></span>
+<span id="cb9-39"><a href="#cb9-39" tabindex="-1"></a><span class="co">#&gt;  6     6             2                  1                     1</span></span>
+<span id="cb9-40"><a href="#cb9-40" tabindex="-1"></a><span class="co">#&gt;  7     7            NA                 NA                    NA</span></span>
+<span id="cb9-41"><a href="#cb9-41" tabindex="-1"></a><span class="co">#&gt;  8     8             2                  1                     1</span></span>
+<span id="cb9-42"><a href="#cb9-42" tabindex="-1"></a><span class="co">#&gt;  9     9            NA                 NA                    NA</span></span>
+<span id="cb9-43"><a href="#cb9-43" tabindex="-1"></a><span class="co">#&gt; 10    10            NA                 NA                    NA</span></span>
+<span id="cb9-44"><a href="#cb9-44" tabindex="-1"></a><span class="co">#&gt; # ℹ 1 more variable: arbitrary_patterns &lt;list&gt;</span></span></code></pre></div>
+</div>
+<div id="using-the-id-argument-uniquely-identify-respondents" class="section level3">
+<h3>Using the <code>id</code> argument: Uniquely identify
+respondents</h3>
+<p>In its default setting, all <code>resquin</code> functions provide an
+integer <code>id</code> column running from 1 to the number of
+respondents in the data set supplied in <code>x</code>. You can turn of
+the creation of the <code>id</code> column by setting
+<code>id = False</code> or supply a vector of unique ids (character or
+numeric). The latter option is useful if a data set provides its own
+vector of ids.</p>
+<p>Here are examples of the three options:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># Default. Integer ids.</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">resp_distributions</span>(testdata)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt; # Number of missings due to min_valid_responses equal to 1: 4</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt; # A data frame:                                             10 × 7</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt;       id  n_na prop_na ii_mean  ii_sd ii_median  mahal</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#&gt;  1     1     0   0        1.33  0.577         1  2.04 </span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt;  2     2     0   0        3.67  1.53          4  1.60 </span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt;  3     3     0   0        2.67  0.577         3  1.38 </span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt;  4     4     1   0.333   NA    NA            NA NA    </span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt;  5     5     0   0        3.33  0.577         3  0.970</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt;  6     6     0   0        2.33  1.53          2  1.38 </span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt;  7     7     1   0.333   NA    NA            NA NA    </span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt;  8     8     0   0        2.67  2.08          2  1.88 </span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt;  9     9     2   0.667   NA    NA            NA NA    </span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt; 10    10     3   1       NA    NA            NA NA</span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co"># No id column</span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="fu">resp_distributions</span>(testdata,<span class="at">id =</span> F)</span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="co">#&gt; # Number of missings due to min_valid_responses equal to 1: 4</span></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a><span class="co">#&gt; # A data frame:                                             10 × 6</span></span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a><span class="co">#&gt;     n_na prop_na ii_mean  ii_sd ii_median  mahal</span></span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a><span class="co">#&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="co">#&gt;  1     0   0        1.33  0.577         1  2.04 </span></span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a><span class="co">#&gt;  2     0   0        3.67  1.53          4  1.60 </span></span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="co">#&gt;  3     0   0        2.67  0.577         3  1.38 </span></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="co">#&gt;  4     1   0.333   NA    NA            NA NA    </span></span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="co">#&gt;  5     0   0        3.33  0.577         3  0.970</span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co">#&gt;  6     0   0        2.33  1.53          2  1.38 </span></span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="co">#&gt;  7     1   0.333   NA    NA            NA NA    </span></span>
+<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a><span class="co">#&gt;  8     0   0        2.67  2.08          2  1.88 </span></span>
+<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="co">#&gt;  9     2   0.667   NA    NA            NA NA    </span></span>
+<span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a><span class="co">#&gt; 10     3   1       NA    NA            NA NA</span></span>
+<span id="cb10-34"><a href="#cb10-34" tabindex="-1"></a></span>
+<span id="cb10-35"><a href="#cb10-35" tabindex="-1"></a><span class="co"># Custom id vectors</span></span>
+<span id="cb10-36"><a href="#cb10-36" tabindex="-1"></a>custom_ids <span class="ot">&lt;-</span> letters[<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(testdata)]</span>
+<span id="cb10-37"><a href="#cb10-37" tabindex="-1"></a><span class="fu">resp_distributions</span>(testdata,<span class="at">id =</span> custom_ids)</span>
+<span id="cb10-38"><a href="#cb10-38" tabindex="-1"></a><span class="co">#&gt; # Number of missings due to min_valid_responses equal to 1: 4</span></span>
+<span id="cb10-39"><a href="#cb10-39" tabindex="-1"></a><span class="co">#&gt; # A data frame:                                             10 × 7</span></span>
+<span id="cb10-40"><a href="#cb10-40" tabindex="-1"></a><span class="co">#&gt;    id     n_na prop_na ii_mean  ii_sd ii_median  mahal</span></span>
+<span id="cb10-41"><a href="#cb10-41" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb10-42"><a href="#cb10-42" tabindex="-1"></a><span class="co">#&gt;  1 a         0   0        1.33  0.577         1  2.04 </span></span>
+<span id="cb10-43"><a href="#cb10-43" tabindex="-1"></a><span class="co">#&gt;  2 b         0   0        3.67  1.53          4  1.60 </span></span>
+<span id="cb10-44"><a href="#cb10-44" tabindex="-1"></a><span class="co">#&gt;  3 c         0   0        2.67  0.577         3  1.38 </span></span>
+<span id="cb10-45"><a href="#cb10-45" tabindex="-1"></a><span class="co">#&gt;  4 d         1   0.333   NA    NA            NA NA    </span></span>
+<span id="cb10-46"><a href="#cb10-46" tabindex="-1"></a><span class="co">#&gt;  5 e         0   0        3.33  0.577         3  0.970</span></span>
+<span id="cb10-47"><a href="#cb10-47" tabindex="-1"></a><span class="co">#&gt;  6 f         0   0        2.33  1.53          2  1.38 </span></span>
+<span id="cb10-48"><a href="#cb10-48" tabindex="-1"></a><span class="co">#&gt;  7 g         1   0.333   NA    NA            NA NA    </span></span>
+<span id="cb10-49"><a href="#cb10-49" tabindex="-1"></a><span class="co">#&gt;  8 h         0   0        2.67  2.08          2  1.88 </span></span>
+<span id="cb10-50"><a href="#cb10-50" tabindex="-1"></a><span class="co">#&gt;  9 i         2   0.667   NA    NA            NA NA    </span></span>
+<span id="cb10-51"><a href="#cb10-51" tabindex="-1"></a><span class="co">#&gt; 10 j         3   1       NA    NA            NA NA</span></span></code></pre></div>
+</div>
+<div id="missing-data-as-a-threat-to-the-validity-of-response-quality-indicators" class="section level3">
+<h3>Missing data as a threat to the validity of response quality
+indicators</h3>
+<p>The argument <code>min_valid_responses</code> can be used to control
+how many responses a respondent must have for a response quality
+indicator to be computed. Per default, <code>resquin</code> requires
+respondents to have valid responses for all questions asked
+<code>(min_valid_responses = 1)</code>. In other words, per default
+<code>resquin</code> requires respondents to have no missing values.</p>
+<p>Of course, missing values are a common occurrence in survey data,
+thus it can make sense to reduce the required share of valid responses
+in <code>min_valid_responses</code> from 1 to a lower one. This leads to
+the calculation of response quality indicator values for more
+respondents. For example, reducing <code>min_valid_responses</code> to
+0.5 would mean that respondents only have to have valid
+(i.e. non-missing) responses on 50% of the questions asked.</p>
+<p>However, allowing <code>NA</code> values (i.e. missing values) can
+change the interpretation and validity of response quality indicators.
+For example, a respondent with ten identical responses on a ten item
+scale (i.e. ten time response option “3”) has more evidence for
+straightlining then a respondent with two identical responses which are
+separated by eight <code>NA</code> values. Both would receive a 1 on the
+<code>simple_nondifferentiation</code> indicator of
+<code>resp_nondifferentiation()</code> or 1 (meaning absolute presence
+of) a Middle Response Style if the response scale had five response
+options. But should the respondents be considered to be identical in
+their extent of straightlining or Middle Response Style? This is up to
+the interpretation of the analyst.</p>
+<p>Although an increasing number of missing values per respondent can
+pose validity threats to all response quality indicators, some
+indicators are more affected by <code>NA</code> values than others.
+Indicators calculated with <code>resp_distributions()</code> are not
+affected as much by missing data, because the
+<code>resp_distributions()</code> indicators average over all response
+values. For the following response indicators missing values are more of
+a threat to validity because they conceptually rely more on the position
+of responses on the response scale:</p>
+<ul>
+<li><code>resp_patterns()</code>:
+<ul>
+<li><code>mean_string_length</code> - Response strings with identical
+values can be broken by <code>NA</code>.</li>
+<li><code>longest_string_length</code> - Response strings with identical
+values can be broken by <code>NA</code>.</li>
+</ul></li>
+<li><code>resp_nondifferentiation()</code>:
+<ul>
+<li><code>simple_nondifferentiation</code> - Straightlining with
+identical values can be broken by <code>NA</code>.</li>
+</ul></li>
+<li><code>resp_styles()</code>:
+<ul>
+<li>All response styles - Response strings with identical values can be
+broken by <code>NA</code>.</li>
+</ul></li>
+</ul>
+<p>In any case, it helps to report how missing values were handled in an
+analysis to increase confidence in and replicability of the results.</p>
+</div>
+<div id="references" class="section level3 unnumbered">
+<h3 class="unnumbered">References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-kim_straightlining_2019" class="csl-entry">
+Kim, Yujin, Jennifer Dykema, John Stevenson, Penny Black, and D. Paul
+Moberg. 2019. <span>“Straightlining: <span>Overview</span> of
+<span>Measurement</span>, <span>Comparison</span> of
+<span>Indicators</span>, and <span>Effects</span> in
+<span>Mail</span>–<span>Web</span> <span>Mixed</span>-<span>Mode</span>
+<span>Surveys</span>.”</span> <em>Social Science Computer Review</em> 37
+(2): 214–33. <a href="https://doi.org/10.1177/0894439317752406">https://doi.org/10.1177/0894439317752406</a>.
+</div>
+</div>
 </div>
 </div>
 

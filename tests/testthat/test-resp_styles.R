@@ -12,6 +12,9 @@ test_that("resp_styles input tests", {
   expect_error(resp_styles(testdata,scale_min = T, scale_max = 5, min_valid_responses = 0.5),
                regexp = "Argument 'scale_min' must be numeric.")
   expect_error(resp_styles(testdata,scale_min = 1, scale_max = 5, min_valid_responses = 5,
+                           normalize = "test"),
+               regexp = "Argument 'min_valid_responses' must be between or equal to 0")
+  expect_error(resp_styles(testdata,scale_min = 1, scale_max = 5, min_valid_responses = 0.5,
                       normalize = "test"),
                regexp = "Argument 'normalize' must be logical.")
   expect_error(resp_styles(testdata,scale_min = 1, scale_max = 5,min_valid_responses = -1),
@@ -20,7 +23,7 @@ test_that("resp_styles input tests", {
                regexp = "Argument 'min_valid_responses' must be numeric.")
   expect_error(resp_styles(testdata,scale_min = 1, scale_max = 5,min_valid_responses = T),
                regexp = "Argument 'min_valid_responses' must be numeric.")
-  expect_error(resp_styles(as.matrix(testdata),scale_min = 1, scale_max = 5,),
+  expect_error(resp_styles(as.matrix(testdata),scale_min = 1, scale_max = 5),
                regexp = "x must be a data.frame or a tibble")
   expect_error(resp_styles(T),
                regexp = "x must be a data.frame or a tibble")
@@ -41,6 +44,19 @@ test_that("resp_styles input tests", {
                       scale_min = 1,
                       scale_max = 5),
                regexp = "var_b")
+  # Extra tests for id input
+  expect_error(resp_styles(x = testdata,
+                                  id = 0),
+               regexp = "id is not of type logical with length one or a numeric or character vector with length equal to the number of rows of x.")
+  expect_error(resp_styles(x = testdata,
+                                  id = c(T,T)),
+               regexp = "id is not of type numeric or character")
+  expect_error(resp_styles(x = testdata,
+                                  id = c(1,2)),
+               regexp = "Supply an `id` variable with the same number of elements as there are rows in x.")
+  expect_error(resp_styles(x = testdata,
+                                  id = c(1:11,11)),
+               regexp = "Supply an `id` variable which uniquely identifies each respondent by position.")
 })
 
 

@@ -1,6 +1,6 @@
 Package: resquin
 Title: Response Quality Indicators for Survey Research
-Version: 0.0.2
+Version: 0.1.1
 Authors@R: c(
     person(given = "Matthias", family = "Roth", email = "matthias.roth@gesis.org",
            role = c("aut", "cre","cph"), comment = c(ORCID = "0000-0003-4369-8106")),
@@ -21,16 +21,19 @@ Description: Calculate common survey data quality indicators for multi-item scal
 License: GPL (>= 3)
 Encoding: UTF-8
 RoxygenNote: 7.3.2
-Imports: cli, purrr, vctrs
-Suggests: knitr, rmarkdown, testthat (>= 3.0.0)
+Imports: cli, purrr, rlang, slider, stringi, tibble, vctrs
+Suggests: knitr, rmarkdown, testthat (>= 3.0.0), tidyr
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://github.com/MatRoth/resquin,
         https://matroth.github.io/resquin/
 BugReports: https://github.com/MatRoth/resquin/issues
+Depends: R (>= 4.1)
+LazyData: true
 NeedsCompilation: no
-Packaged: 2024-09-09 06:46:26 UTC; rothms
-Author: Matthias Roth [aut, cre, cph] (<https://orcid.org/0000-0003-4369-8106>),
+Packaged: 2025-06-27 07:24:41 UTC; rothms
+Author: Matthias Roth [aut, cre, cph] (ORCID:
+    <https://orcid.org/0000-0003-4369-8106>),
   Nivedita Bhaktha [aut, ctb],
   Matthias Bluemke [aut, ctb],
   Thomas Knopf [aut, ctb],
@@ -39,4 +42,4 @@ Author: Matthias Roth [aut, cre, cph] (<https://orcid.org/0000-0003-4369-8106>),
   Çağla Yildiz [aut, ctb]
 Maintainer: Matthias Roth <matthias.roth@gesis.org>
 Repository: CRAN
-Date/Publication: 2024-09-11 15:10:02 UTC
+Date/Publication: 2025-06-27 07:50:01 UTC

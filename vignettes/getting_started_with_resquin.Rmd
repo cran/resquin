@@ -1,6 +1,7 @@
 ---
 title: "Getting started with resquin"
 output: rmarkdown::html_vignette
+bibliography: references.bib
 vignette: >
   %\VignetteIndexEntry{resquin tutorial}
   %\VignetteEngine{knitr::rmarkdown}
@@ -60,7 +61,7 @@ Lets use this data set to calculate response quality indicators.
 Response styles capture systematic shifts in respondents response
 behavior. For example, respondents with an extreme response style may
 only choose the lowest and highest categories (in our example 1 and 5)
-while mid-point responder only choose the midpoint of a scale (in our
+while mid-point respondents only choose the midpoint of a scale (in our
 example 3).
 
 To calculate response styles we can use the `resp_styles()` function.
@@ -112,6 +113,25 @@ should only be calculated for respondents who have valid responses on
 all variables. Values between 0 and 1 indicate the share of responses
 that need to be valid to be included in the response style calculations.
 
+### How to quickly glance at results
+
+Results from `resp_*()` functions can be fed to `summary()` and `print()` functions
+to quickly create overviews for the calculated response quality indicators.
+
+```{r}
+results_response_styles |>
+  summary()
+```
+
+Calculates the averages and a five point summary of the response quality indicators.
+
+```{r}
+results_response_styles |> 
+  print()
+```
+
+Prints a boxplot of the indicators.
+
 ### `resp_distributions()`: Intra-individual response distribution indicators
 
 `resp_distributions()` calculates indicators which reflect the location
@@ -144,4 +164,178 @@ The resulting data frame contains eight columns:
 
 -   mahal: Mahalanobis distance per respondent.
 
-You can learn more about the response distribution indicators using `?resp_distributions``
+You can learn more about the response distribution indicators using `?resp_distributions`
+
+### `resp_nondifferentiation()`: Response nondifferentiation indicators
+`resp_nondifferentiation` calculates indicators primarily measuring what is known
+as straightlining. However, different indicators measure different aspects of straightlining.
+While *Simple Nondifferentiation* just measures whether respondents used the same response
+option for all questions, other indicators such as the *Mean Root of Pairs Method* or 
+the *Scale Point Variation Method* provide continuous values of nondifferentiation,
+measuring how varied the choice of response options for each respondent is.
+
+`resp_nondifferentiation()` works just like `resp_distributions()` and `resp_styles()`.
+```{r}
+results_resp_nondifferentiation <- resp_nondifferentiation(
+  x = testdata,
+  min_valid_responses = 1) # Excludes respondents with less than 100% valid responses
+
+round(results_resp_nondifferentiation,2)
+```
+
+The resulting dataframe contains four columns containing indicators described
+by [@kim_straightlining_2019]:
+
+-   simple_nondifferentiation: Respondents are assigned 1 or 0 depending on 
+    whether all responses have the same value (1) or not (0).
+-   mean_root_pairs: Mean of the root of the absolute differences between
+    all pairs in a multi-item scale or matrix questions. It ranges from 0
+    (least straightlining) to 1 (most straightlining). 
+-   max_identical_rating: Proportion of the most commonly selected
+    response option among all responses in a multi-item scale or matrix questions.
+    It ranges from 0 (least straightlining) to 1 (most straightlining).
+-   scale_point_variation: The measure becomes larger if respondents use
+    more scales points in a multi-item scale or matrix questions.
+
+You can learn more about the the response nondifferentiation indicators using 
+`?resp_nondifferentiation`.
+
+### `resp_patterns()`: Response pattern indicators
+Response patterns describe suspicious response patterns arising from careless or insufficient effort responding. Careless or insufficient effort respondents might choose the same answer option repeatedly (i.e. creating a long string of equal responses) or use pattern, such as zig-zaging, to complete a survey.
+
+`resp_patterns()` provides three columns which contain longstring analysis indicators for each respondent. These three columns are always returned. There are two more optional columns () for the analysis of other repeating response patterns: defined_patterns and arbitrary_patterns:
+
+To obtain the three longstring analysis columns simply call `resp_patterns()`:
+```{r}
+results_resp_patterns <- resp_patterns(testdata)
+round(results_resp_patterns,2)
+```
+
+To obtain counts of defined response patterns per respondents use the `defined_patterns`
+argument. You can either supply a single vector representing a response pattern, 
+or a list of vectors representing multiple response patterns. 
+
+```{r}
+# Single defined pattern
+defined_patterns_single <- resp_patterns(
+  x = testdata,
+  defined_patterns = c(1,2,3)
+)
+defined_patterns_single
+
+# Multiple defined patterns
+defined_patterns_multiple <- resp_patterns(
+  x = testdata,
+  defined_patterns = list( # wrap multiple pattern vectors into a list
+    c(1,2,3),
+    c(2,3,4),
+    c(4,3,2),
+    c(3,2,1)
+  )
+)
+
+defined_patterns_multiple
+
+# defined patterns are returned as a single list column.
+# One way to make the data accessible is by using tidyr::unnest_wider()
+# This way, each column represents the count of one defined pattern
+
+defined_patterns_multiple |> 
+  tidyr::unnest_wider(defined_patterns)
+```
+
+Finally, you can request the detection of arbitrary response patterns with counts
+larger than one and pattern lengths longer than one using the `arbitrary_patterns`
+argument
+
+```{r}
+arbitrary_patterns_length_2 <- resp_patterns(
+  x = testdata,
+  arbitrary_patterns = 2
+)
+
+arbitrary_patterns_length_2
+
+# You can also request the detection of patterns of multiple 
+# lengths, in this case 2 and 3
+arbitrary_patterns_length_2_3 <- resp_patterns(
+  x = testdata,
+  arbitrary_patterns = c(2,3)
+)
+arbitrary_patterns_length_2_3
+```
+
+
+
+### Using the `id` argument: Uniquely identify respondents
+
+In its default setting, all `resquin` functions provide an integer `id` column
+running from 1 to the number of respondents in the data set supplied in `x`. You can turn of the
+creation of the `id` column by setting `id = False` or supply a vector of unique
+ids (character or numeric). The latter option is useful if a data set provides its
+own vector of ids.
+
+Here are examples of the three options:
+```{r}
+# Default. Integer ids.
+resp_distributions(testdata)
+
+# No id column
+resp_distributions(testdata,id = F)
+
+# Custom id vectors
+custom_ids <- letters[1:nrow(testdata)]
+resp_distributions(testdata,id = custom_ids)
+```
+
+### Missing data as a threat to the validity of response quality indicators
+
+The argument `min_valid_responses` can be used to control how many 
+responses a respondent must have for a response quality indicator to be computed.
+Per default, `resquin` requires respondents to have valid responses for all questions
+asked `(min_valid_responses = 1)`. In other words, per default `resquin` requires
+respondents to have no missing values. 
+
+Of course, missing values are a common occurrence in survey data, thus it can make
+sense to reduce the required share of valid responses in `min_valid_responses` from 1 to a
+lower one. This leads to the calculation of response quality indicator values 
+for more respondents. For example, reducing `min_valid_responses` to 0.5 would mean
+that respondents only have to have valid (i.e. non-missing) responses on 50% of
+the questions asked. 
+
+However, allowing `NA` values (i.e. missing values) can change the interpretation
+and validity of response quality indicators.
+For example, a respondent with ten identical responses on a ten item scale
+(i.e. ten time response option "3") has more evidence for straightlining then a respondent with two identical responses
+which are separated by eight `NA` values. Both would receive a 1 on the 
+`simple_nondifferentiation` indicator of `resp_nondifferentiation()` or 1 (meaning
+absolute presence of) a Middle Response Style if the response scale had five response options.
+But should the respondents be considered to be identical in their extent of
+straightlining or Middle Response Style? This is up to the interpretation of the 
+analyst. 
+
+Although an increasing number of missing values per respondent can pose validity
+threats to all response quality indicators, some indicators are more affected 
+by `NA` values than others. Indicators calculated with `resp_distributions()` are
+not affected as much by missing data, because the `resp_distributions()` indicators
+average over all response values.
+For the following response indicators missing values are more of a threat to validity
+because they conceptually rely more on the position of responses on the response
+scale:
+
+* `resp_patterns()`:
+    + `mean_string_length` - Response strings with identical values can be broken by `NA`.
+    + `longest_string_length` - Response strings with identical values can be broken by `NA`.
+
+* `resp_nondifferentiation()`:
+    + `simple_nondifferentiation` - Straightlining with identical values can be broken by `NA`.
+  
+* `resp_styles()`:
+    + All response styles - Response strings with identical values can be broken by `NA`.
+
+In any case, it helps to report how missing values were handled in an analysis to 
+increase confidence in and replicability of the results. 
+
+### References
+
+

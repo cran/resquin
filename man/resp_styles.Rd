@@ -4,29 +4,40 @@
 \alias{resp_styles}
 \title{Compute response style indicators}
 \usage{
-resp_styles(x, scale_min, scale_max, min_valid_responses = 1, normalize = TRUE)
+resp_styles(
+  x,
+  scale_min,
+  scale_max,
+  min_valid_responses = 1,
+  normalize = TRUE,
+  id = T
+)
 }
 \arguments{
 \item{x}{A data frame containing survey responses in wide format. For more information
 see section "Data requirements" below.}
 
-\item{scale_min}{numeric. Minimum of scale provided.}
+\item{scale_min}{Numeric of length 1. Minimum of scale provided.}
 
-\item{scale_max}{numeric. Maximum of scale provided.}
+\item{scale_max}{Numeric of length 1. Maximum of scale provided.}
 
-\item{min_valid_responses}{numeric between 0 and 1. Defines the share of valid responses
+\item{min_valid_responses}{Numeric between 0 and 1 of length 1. Defines the share of valid responses
 a respondent must have to calculate response style indicators.}
 
-\item{normalize}{logical. If \emph{TRUE}, counts of response style indicators will
+\item{normalize}{logical of length 1. If \emph{TRUE}, counts of response style indicators will
 be divided by the number of non-missing responses per respondent. Default is
 \emph{TRUE}.}
+
+\item{id}{default is \code{True}. If the default value is supplied
+a column named \code{id} with integer ids will be created. If \code{False} is supplied, no id column will be created. Alternatively, a numeric or character vector of unique values identifying
+each respondent can be supplied. Needs to be of the same length as the number of rows of \code{x}.}
 }
 \value{
 Returns a data frame with response style indicators
 per respondent.
 \itemize{
 \item Rows: Equal to number of rows in x.
-\item Columns: Five, one for each response style indicator.
+\item Columns: Five for each response style indicator + id column (if specified).
 }
 }
 \description{
@@ -37,18 +48,18 @@ Response styles capture systematic shifts in respondents response behavior.
 \code{resp_styles()} is aimed at multi-item scales or matrix questions which use the same number of
 response options for many questions.
 
-#' The following response style indicators are calculated per respondent:
+The following response style indicators are calculated per respondent:
 Middle response style (MRS), acquiescence response style (ARS), disacquiescence
-response style (DARS), extreme response style (ERS) and
+response style (DRS), extreme response style (ERS) and
 non-extreme response style (NERS).
 
 The response style indicators are calculated in the following way
 \itemize{
 \item MRS: Sum of mid point responses.
 \item ARS: Sum of responses larger than midpoint.
-\item DARS: Sum of responses lower than midpoint.
+\item DRS: Sum of responses lower than midpoint.
 \item ERS: Sum of lowest or highest category responses.
-\item NERS: Sum of responses between lowest and highest respnose category.
+\item NERS: Sum of responses between lowest and highest response category.
 }
 
 Note that ARS and DRS assume that the polarity of the scale is positive. This
@@ -109,11 +120,15 @@ resp_styles(testdata,
 }
 \references{
 Bhaktha, Nivedita, Henning Silber, and Clemens Lechner. 2024. „Characterizing response quality in surveys with multi-item scales: A unified framework“. OSF-preprtint: https://osf.io/9gs67/
+
 van Vaerenbergh, Y., and T. D. Thomas. 2013. „Response Styles in Survey Research: A Literature Review of Antecedents, Consequences, and Remedies“. International Journal of Public Opinion Research 25(2):195–217. doi: 10.1093/ijpor/eds021.
+
 Wetzel, Eunike, Claus H. Carstensen, und Jan R. Böhnke. 2013. „Consistency of Extreme Response Style and Non-Extreme Response Style across Traits“. Journal of Research in Personality 47(2):178–89. doi: 10.1016/j.jrp.2012.10.010.
 }
 \seealso{
 \code{\link[=resp_distributions]{resp_distributions()}} for calculating response distribution indicators.
+\code{\link[=resp_nondifferentiation]{resp_nondifferentiation()}} for calculating response nondifferentiation indicators.
+\code{\link[=resp_patterns]{resp_patterns()}} for calculating response pattern indicators.
 }
 \author{
 Matthias Roth, Matthias Bluemke & Clemens Lechner

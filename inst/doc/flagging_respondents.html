@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Flagging respondents</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Flagging respondents</h1>
+
+
+
+<div id="using-flag_resp-to-create-and-compare-flagging-strategies" class="section level2">
+<h2>Using <code>flag_resp()</code> to create and compare flagging
+strategies</h2>
+<p>One use-case for response quality indicators is to use them to flag
+responses which potentially are of low quality. <code>resquin</code>
+provides the function <code>flag_resp()</code> to create a data frame of
+booleans (<code>T</code> and <code>F</code>) according to user-defined
+cut-off values on response quality indicators. If a respondent receives
+a <code>T</code> value, they are flagged as suspicious. If they receive
+<code>F</code> value, they are deemed unsuspicious.</p>
+<p>The strength of <code>flag_resp()</code> lies in its ability to
+quickly create and compare multiple flagging strategies, as the
+following example illustrates:</p>
+<p>Suppose we use data on response styles to decide whether respondents
+are low-quality responders on the 15 item <code>nep</code> scale. We can
+use <code>resp_styles()</code> to calculate response style indices per
+respondent.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(resquin)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>nep_resp_styles <span class="ot">&lt;-</span> <span class="fu">resp_styles</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="at">x =</span> nep,</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="at">scale_min =</span> <span class="dv">1</span>, <span class="co"># minimum response option</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="at">scale_max =</span> <span class="dv">5</span>, <span class="co"># maximum response option</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="at">min_valid_responses =</span> <span class="dv">1</span>) <span class="co"># default, excludes respondents with any missing value</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">summary</span>(nep_resp_styles)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#&gt; ── Averages of response quality indicators</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co">#&gt;  MRS  ARS  DRS  ERS NERS </span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co">#&gt; 0.16 0.55 0.30 0.24 0.76</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co">#&gt; ── Quantiles of response quality indicators</span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 × 6</span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="co">#&gt;   quantiles   MRS   ARS   DRS   ERS  NERS</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a><span class="co">#&gt; 1 0%         0     0     0     0     0   </span></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a><span class="co">#&gt; 2 25%        0.07  0.47  0.2   0.07  0.6 </span></span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a><span class="co">#&gt; 3 50%        0.13  0.53  0.33  0.2   0.8 </span></span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="co">#&gt; 4 75%        0.2   0.6   0.4   0.4   0.93</span></span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a><span class="co">#&gt; 5 100%       0.93  1     0.73  1     1</span></span></code></pre></div>
+<p>In the first example, we will consider the acquiescence response
+style (ARS). ARS represents the tendency of respondents to agree to
+questions regardless of their content. Since the <code>nep</code> scale
+includes positively and negatively keyed items, we can expect that
+higher ARS values indeed correspond to this behavior: Respondents who
+are more concerned about nature should choose higher response options on
+the positively keyed items and more negative responses on the negatively
+keyed items. Just choosing all high response options presents a
+substantively inconsistent response behavior, potentially caused by
+acquiescence.</p>
+<p>A first idea could be to flag respondents which have more than 80%
+responses in the ARS category.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>first_flagging <span class="ot">&lt;-</span> <span class="fu">flag_resp</span>(nep_resp_styles,</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>                            ARS <span class="sc">&gt;</span> <span class="fl">0.8</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">summary</span>(first_flagging)</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; ── Number of respondents flagged (Total N: 1222)</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; ARS &gt; 0.8 </span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt;        33</span></span></code></pre></div>
+<p>We can see that 33 respondents are flagged as suspicious, as their
+ARS score is above 0.8.</p>
+<div id="using-two-flagging-strategies" class="section level3">
+<h3>Using two flagging strategies</h3>
+<p>In a second step, we might also be interested in flagging respondents
+who choose the same response option repeatedly. We can use the
+<code>resp_patterns()</code> to compute the longest string length
+indicator. This indicator shows the longest string of repeated response
+options. We will flag respondents which have a longest string length of
+8 or more. We keep the ARS flagging strategy in place to compare it to
+the new one.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>nep_resp_patterns <span class="ot">&lt;-</span> <span class="fu">resp_patterns</span>(nep)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>nep_resp_patterns_resp_styles <span class="ot">&lt;-</span> <span class="fu">cbind</span>(nep_resp_styles,nep_resp_patterns[,<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>second_flagging <span class="ot">&lt;-</span> <span class="fu">flag_resp</span>(nep_resp_patterns_resp_styles,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>                             ARS <span class="sc">&gt;</span> <span class="fl">0.8</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>                             longest_string_length <span class="sc">&gt;=</span> <span class="dv">8</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="fu">summary</span>(second_flagging)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; ── Number of respondents flagged (Total N: 1222)</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt;                  ARS &gt; 0.8 longest_string_length &gt;= 8 </span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt;                         33                         19</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; ── Agreement between flagging strategies</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; Flag                         longest_string_length &gt;= 8   ARS &gt; 0.8 </span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; ---------------------------  ---------------------------  ----------</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; longest_string_length &gt;= 8   19                                     </span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; ARS &gt; 0.8                    9                            33</span></span></code></pre></div>
+<p>We can see that 19 respondents have a longest string length of larger
+or equal to 8. The output also contains an agreement matrix between the
+flagging strategies. In the second row of the first column, we can see
+that the two flagging strategies agree on 9 flagged respondents.
+Together, both strategies would flag 33 + 19 - 9 = 43 respondents of
+1222.</p>
+<p>It is also possible to join mutliple flagging expressions with an
+<code>&amp;</code> or <code>|</code> operator.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">flag_resp</span>(nep_resp_patterns_resp_styles,</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>          ARS <span class="sc">&gt;</span> <span class="fl">0.8</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>          longest_string_length <span class="sc">&gt;=</span> <span class="dv">8</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>          ARS <span class="sc">&gt;</span> <span class="fl">0.8</span> <span class="sc">|</span> longest_string_length <span class="sc">&gt;=</span> <span class="dv">8</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="fu">summary</span>()</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; ── Number of respondents flagged (Total N: 1222)</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt;                              ARS &gt; 0.8             longest_string_length &gt;= 8 </span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt;                                     33                                     19 </span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; ARS &gt; 0.8 | longest_string_length &gt;= 8 </span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt;                                     43</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; ── Agreement between flagging strategies</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; Flag                                     ARS &gt; 0.8 | longest_string_length &gt;= 8   longest_string_length &gt;= 8   ARS &gt; 0.8 </span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; ---------------------------------------  ---------------------------------------  ---------------------------  ----------</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; ARS &gt; 0.8 | longest_string_length &gt;= 8   43                                                                              </span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; longest_string_length &gt;= 8               19                                       19                                     </span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; ARS &gt; 0.8                                33                                       9                            33</span></span></code></pre></div>
+</div>
+<div id="comparing-three-flagging-strategies-with-one-comming-from-a-different-source" class="section level3">
+<h3>Comparing three flagging strategies with one comming from a
+different source</h3>
+<p>We can use any vector of logical (i.e. <code>T</code> and
+<code>F</code>) values with the same number of rows as the
+<code>nep</code> data frame and compare them with the values provided by
+<code>resquin</code>. In the following example we create a random vector
+of boolean values and add it to the data frame from the last
+example.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>random_vector <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(F,T),<span class="dv">1000</span>,<span class="at">replace =</span> T)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>random_vector[<span class="fu">is.na</span>(nep_resp_styles<span class="sc">$</span>ARS)] <span class="ot">&lt;-</span> <span class="cn">NA</span> <span class="co"># Add missing data as in the other data frames</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co"># example three contains response indicator values per respondent</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>external_indicator_data <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  nep_resp_patterns_resp_styles,</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  <span class="at">new_indicator =</span> random_vector)</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="fu">flag_resp</span>(external_indicator_data,</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>          ARS <span class="sc">&gt;</span> <span class="fl">0.8</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>          longest_string_length <span class="sc">&gt;=</span> <span class="dv">8</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>          new_indicator <span class="sc">==</span> T) <span class="sc">|&gt;</span> </span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>  <span class="fu">summary</span>()</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; ── Number of respondents flagged (Total N: 1222)</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt;                  ARS &gt; 0.8 longest_string_length &gt;= 8 </span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt;                         33                         19 </span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt;         new_indicator == T </span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt;                        374</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; ── Agreement between flagging strategies</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt; Flag                         new_indicator == T   longest_string_length &gt;= 8   ARS &gt; 0.8 </span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt; ---------------------------  -------------------  ---------------------------  ----------</span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt; new_indicator == T           374                                                         </span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#&gt; longest_string_length &gt;= 8   9                    19                                     </span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt; ARS &gt; 0.8                    16                   9                            33</span></span></code></pre></div>
+<p>The new indicator <code>new_indicator</code> now is included in the
+output of the summary function and can be compared with the other
+indicators.</p>
+</div>
+<div id="filtering-respondents" class="section level3">
+<h3>Filtering respondents</h3>
+<p>The output of <code>flag_resp()</code> can be used to filter out the
+flagged respondents. The output of <code>flag_resp()</code> is just a
+collection of logicals:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>flag_df <span class="ot">&lt;-</span> <span class="fu">flag_resp</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  nep_resp_patterns_resp_styles,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  ARS <span class="sc">&gt;</span> <span class="fl">0.8</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  longest_string_length <span class="sc">&gt;=</span> <span class="dv">8</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  ARS <span class="sc">&gt;</span> <span class="fl">0.8</span> <span class="sc">|</span> longest_string_length <span class="sc">&gt;=</span> <span class="dv">8</span>) </span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>flag_df</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt; # A data frame: 1,222 × 4</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt;       id `ARS &gt; 0.8` `longest_string_length &gt;= 8` ARS &gt; 0.8 | longest_string_l…¹</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt;    &lt;int&gt; &lt;lgl&gt;       &lt;lgl&gt;                        &lt;lgl&gt;                         </span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt;  1     1 FALSE       FALSE                        FALSE                         </span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt;  2     2 FALSE       FALSE                        FALSE                         </span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt;  3     3 FALSE       FALSE                        FALSE                         </span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt;  4     4 FALSE       FALSE                        FALSE                         </span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt;  5     5 FALSE       FALSE                        FALSE                         </span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt;  6     6 NA          NA                           NA                            </span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt;  7     7 FALSE       FALSE                        FALSE                         </span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt;  8     8 FALSE       FALSE                        FALSE                         </span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt;  9     9 FALSE       FALSE                        FALSE                         </span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt; 10    10 FALSE       FALSE                        FALSE                         </span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt; # ℹ 1,212 more rows</span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt; # ℹ abbreviated name: ¹​`ARS &gt; 0.8 | longest_string_length &gt;= 8`</span></span></code></pre></div>
+<p>We can use these to filter respondents from the original
+<code>nep</code> dataset. We can exclude the flagged respondent.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># Exclude the 33 flagged respondents with ARS &gt; 0.8</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>nep[<span class="sc">!</span>flag_df<span class="sc">$</span><span class="st">`</span><span class="at">ARS &gt; 0.8</span><span class="st">`</span>,] <span class="sc">|&gt;</span> </span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="co">#exclude respondents with missing values</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; # A tibble: 904 × 15</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt;    bczd005a bczd006a bczd007a bczd008a bczd009a bczd010a bczd011a bczd012a</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt;       &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt;  1        4        4        5        2        4        4        5        2</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt;  2        5        2        4        2        5        2        4        1</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt;  3        4        2        2        2        4        2        4        2</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt;  4        2        2        4        4        3        4        3        2</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt;  5        2        2        5        5        4        4        5        4</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt;  6        5        2        5        2        5        4        4        2</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt;  7        5        2        5        3        4        4        5        1</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt;  8        5        2        4        4        4        3        5        2</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt;  9        1        3        5        5        4        5        5        1</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt; 10        4        2        4        2        5        3        2        2</span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co">#&gt; # ℹ 894 more rows</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="co">#&gt; # ℹ 7 more variables: bczd013a &lt;dbl&gt;, bczd014a &lt;dbl&gt;, bczd015a &lt;dbl&gt;,</span></span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a><span class="co">#&gt; #   bczd016a &lt;dbl&gt;, bczd017a &lt;dbl&gt;, bczd018a &lt;dbl&gt;, bczd019a &lt;dbl&gt;</span></span></code></pre></div>
+<p>Alternatively we can filter out the flagged respondent.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># Extract only the 33 flagged respondents with ARS 0.8</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>nep[flag_df<span class="sc">$</span><span class="st">`</span><span class="at">ARS &gt; 0.8</span><span class="st">`</span>,] <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt; # A tibble: 33 × 15</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt;    bczd005a bczd006a bczd007a bczd008a bczd009a bczd010a bczd011a bczd012a</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt;       &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt;  1        4        3        4        4        4        4        4        4</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt;  2        4        4        5        5        4        4        5        3</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt;  3        3        4        4        4        4        4        4        4</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt;  4        4        4        4        4        4        4        4        4</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt;  5        4        4        4        5        4        4        5        4</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt;  6        4        4        5        3        4        4        4        4</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt;  7        4        4        5        4        5        4        5        4</span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt;  8        4        4        3        5        4        4        4        4</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt;  9        4        2        5        4        5        4        5        4</span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#&gt; 10        4        4        4        4        4        4        4        4</span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#&gt; # ℹ 23 more rows</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#&gt; # ℹ 7 more variables: bczd013a &lt;dbl&gt;, bczd014a &lt;dbl&gt;, bczd015a &lt;dbl&gt;,</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="co">#&gt; #   bczd016a &lt;dbl&gt;, bczd017a &lt;dbl&gt;, bczd018a &lt;dbl&gt;, bczd019a &lt;dbl&gt;</span></span></code></pre></div>
+<p>Notice that you can also use the <code>id</code> column in the
+<code>flag_df</code> to join the <code>flag_df</code> to your original
+data.</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

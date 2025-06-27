@@ -4,21 +4,25 @@
 \alias{resp_distributions}
 \title{Compute response distribution indicators}
 \usage{
-resp_distributions(x, min_valid_responses = 1)
+resp_distributions(x, min_valid_responses = 1, id = T)
 }
 \arguments{
 \item{x}{A data frame containing survey responses in wide format. For more information
 see section "Data requirements" below.}
 
-\item{min_valid_responses}{numeric between 0 and 1. Defines the share of valid responses
+\item{min_valid_responses}{Numeric between 0 and 1 of length 1. Defines the share of valid responses
 a respondent must have to calculate response quality indicators. Default is 1.}
+
+\item{id}{default is \code{True}. If the default value is supplied
+a column named \code{id} with integer ids will be created. If \code{False} is supplied, no id column will be created. Alternatively, a numeric or character vector of unique values identifying
+each respondent can be supplied. Needs to be of the same length as the number of rows of \code{x}.}
 }
 \value{
 Returns a data frame with response quality indicators per respondent.
 Dimensions:
 \itemize{
 \item Rows: Equal to number of rows in x.
-\item Columns: Six, one for each response distribution indicator.
+\item Columns: Six response distribution indicator colunns + id column (if specified).
 }
 }
 \description{
@@ -73,7 +77,13 @@ latent variable (Marjanovic et al., 2015).
 }
 }
 
-\section{Mahalanobis distance could not be calculated}{
+\section{Mahalanobis distance}{
+
+Mahalanobis distance differs from other computed indicators in that its value
+represents the distance of the respondents responses to a set of average responses
+of the sample. Thus, the mahalanobis distance relates the individual to the sample
+whereas other indicators in \code{resp_distributions()} describe the response distribution
+of a single respondent.
 
 Under certain circumstances, the mahalanobis distance can not be calculated.
 This may be if there is high collinearity (correlation between variables) or
@@ -81,6 +91,16 @@ if there are to many missing values.
 Although this can happen in survey research data, this message can also
 indicate that something in the data is "off" due to one of the reasons stated
 above. A manual inspection for low-quality responses can be a next step.
+
+A second issue with the calculation of mahalanobis distance values is, that it
+requires all data to be non-missing. This is the case if min_valid_responses = 1.
+However, if missing values are allowed, we use within respondent mean imputation
+to allow the calculation of mahalanobis distance values. This may lead to nonsensical
+mahalanobis distance values if the share of missing responses of a respondent is large
+and the respondent would actually have answered differently from their average
+response. If you want to calculate mahalanobis distance values for respondents
+with missing values, it is advisable to take a careful approach. Investigate missing patterns and
+compare results between different levels of min_valid_responses.
 }
 
 \examples{
@@ -119,6 +139,7 @@ doi: 10.1016/j.paid.2014.08.021.
 }
 \seealso{
 \code{\link[=resp_styles]{resp_styles()}} for calculating response style indicators.
+\code{\link[=resp_nondifferentiation]{resp_nondifferentiation()}} for calculating response nondifferentiation indicators.
 }
 \author{
 Matthias Roth, Matthias Bluemke & Clemens Lechner

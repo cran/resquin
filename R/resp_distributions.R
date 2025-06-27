@@ -5,8 +5,11 @@
 #'
 #' @param x A data frame containing survey responses in wide format. For more information
 #' see section "Data requirements" below.
-#' @param min_valid_responses numeric between 0 and 1. Defines the share of valid responses
+#' @param min_valid_responses Numeric between 0 and 1 of length 1. Defines the share of valid responses
 #' a respondent must have to calculate response quality indicators. Default is 1.
+#' @param id default is `True`. If the default value is supplied
+#' a column named `id` with integer ids will be created. If `False` is supplied, no id column will be created. Alternatively, a numeric or character vector of unique values identifying
+#' each respondent can be supplied. Needs to be of the same length as the number of rows of `x`.
 #'
 #' @details
 #' The following response distribution indicators are calculated per respondent:
@@ -48,23 +51,39 @@
 #' responses are distributed randomly or not with respect to an assumed
 #' latent variable (Marjanovic et al., 2015).
 #'
-#' @section Mahalanobis distance could not be calculated:
+#' @section Mahalanobis distance:
+#' Mahalanobis distance differs from other computed indicators in that its value
+#' represents the distance of the respondents responses to a set of average responses
+#' of the sample. Thus, the mahalanobis distance relates the individual to the sample
+#' whereas other indicators in `resp_distributions()` describe the response distribution
+#' of a single respondent.
+#'
 #' Under certain circumstances, the mahalanobis distance can not be calculated.
 #' This may be if there is high collinearity (correlation between variables) or
 #' if there are to many missing values.
 #' Although this can happen in survey research data, this message can also
 #' indicate that something in the data is "off" due to one of the reasons stated
 #' above. A manual inspection for low-quality responses can be a next step.
-#
 #'
+#' A second issue with the calculation of mahalanobis distance values is, that it
+#' requires all data to be non-missing. This is the case if min_valid_responses = 1.
+#' However, if missing values are allowed, we use within respondent mean imputation
+#' to allow the calculation of mahalanobis distance values. This may lead to nonsensical
+#' mahalanobis distance values if the share of missing responses of a respondent is large
+#' and the respondent would actually have answered differently from their average
+#' response. If you want to calculate mahalanobis distance values for respondents
+#' with missing values, it is advisable to take a careful approach. Investigate missing patterns and
+#' compare results between different levels of min_valid_responses.
+#
 #' @returns Returns a data frame with response quality indicators per respondent.
 #'  Dimensions:
 #'  * Rows: Equal to number of rows in x.
-#'  * Columns: Six, one for each response distribution indicator.
+#'  * Columns: Six response distribution indicator colunns + id column (if specified).
 #'
 #' @author Matthias Roth, Matthias Bluemke & Clemens Lechner
 #'
 #' @seealso [resp_styles()] for calculating response style indicators.
+#' [resp_nondifferentiation()] for calculating response nondifferentiation indicators.
 #'
 #' @references Dunn, Alexandra M., Eric D. Heggestad, Linda R. Shanock, and Nels Theilgard. 2018.
 #' “Intra-Individual Response Variability as an Indicator of Insufficient Effort Responding:
@@ -100,20 +119,13 @@
 #'    round(2)
 #'
 #' @export
-resp_distributions <- function(x, min_valid_responses = 1) {
+resp_distributions <- function(x, min_valid_responses = 1,id = T) {
   # Set globally as min_valid_responses controls behavior on missing data
   na.rm <- T
 
   # General input checks
-  input_check(x)
+  input_check(x,min_valid_responses,id)
 
-  # Function specif input checks
-  if(!is.numeric(min_valid_responses)) cli::cli_abort(
-    c("!" = "Argument 'min_valid_responses' must be numeric.")
-  )
-  if(min_valid_responses >1|min_valid_responses<0) cli::cli_abort(
-    c("!" = "Argument 'min_valid_responses' must be between or equal to 0 and 1.")
-  )
 
   # Truncate response quality indicators where n valid responses is < min_valid_responses
   na_mask <- if(min_valid_responses== 0){
@@ -133,6 +145,16 @@ resp_distributions <- function(x, min_valid_responses = 1) {
   # Calculate response quality indicators
   output <-list()
 
+  # Conditional id column
+  if(isTRUE(id)){
+    output$id <- 1:nrow(x)
+  } else {
+    if(!isFALSE(id)){
+      output$id <- id
+    }
+  }
+
+
   # Missing numbers (for all respondents)
   output$n_na <- rowSums(is.na(x))
   output$prop_na <- (output$n_na/ncol(x))
@@ -148,7 +170,7 @@ resp_distributions <- function(x, min_valid_responses = 1) {
     expr = {output$mahal[!na_mask] <- mahalanobis_na(
       x = x[!na_mask,],
       center = colMeans(x[!na_mask,],na.rm = T),
-      cov = stats::cov(x = x[!na_mask,],
+      cov = stats::cov(x = x[!na_mask,], # cov uses pairwise complete obs to allow for missings
                 use = "pairwise.complete.obs"))},
 
     error = function(e){
@@ -162,17 +184,29 @@ resp_distributions <- function(x, min_valid_responses = 1) {
   )
 
 
-  # Change type
-  output <- as.data.frame(output)
+  # Change type & return
+  output <- new_resp_indicator(output,
+                               min_valid_responses,
+                               na_mask,
+                               if("id" %in% names(output)) output$id else F)
   output
 }
 
 #' Modified stats::mahalanobis function which allows for NA values
+#' by using mean imputation.
 #' @noRd
 mahalanobis_na<-\(x,center,cov){
+  # mean imputation for missing values
+  x <- x |>
+    apply(1,
+          \(cur_row){
+            cur_row[is.na(cur_row)]<-mean(cur_row,na.rm=T)
+            cur_row}) |>
+    t()
+
   x <- as.matrix(x)
   x <- sweep(x, 2L, center)
   cov <- solve(cov)
-  x[is.na(x)] <- 0 #set NA to 0 to propagate numerical value instead of NA
+
   sqrt(rowSums(x %*% cov * x))
 }
